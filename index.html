@@ -76,6 +76,20 @@
 			height: 94px;
 			border: 2px solid #666;
 		}
+		.apartment-title {
+			color: #ffffff;
+			font-size: 28px;
+			font-weight: bold;
+			margin: 0 0 10px 0;
+			text-align: center;
+		}
+		.instruction-text {
+			color: #888888;
+			font-size: 12px;
+			text-align: center;
+			margin: 10px 0 0 0;
+			line-height: 1.4;
+		}
 	</style>
 </head>
 <body>
@@ -84,6 +98,7 @@
 	
 	<div class="main-container">
 		<div class="left-panel">
+			<h1 class="apartment-title">Apartment</h1>
 			<div class="controls">
 				<label>Pixel Size: <input type="range" id="pixelSize" min="4" max="32" value="8"></label>
 				<span id="pixelSizeValue">8</span>
@@ -92,6 +107,7 @@
 				<button id="windowBtn">입주하기</button>
 			</div>
 			<canvas id="mainCanvas" width="500" height="375" class="main-canvas"></canvas>
+			<p class="instruction-text">입주하기 버튼을 누르면 화면이 녹화됩니다. 아파트 밖에서 보일 창문 풍경을 녹화해보세요.</p>
 		</div>
 		
 		<div class="right-panel" id="rightPanel">
@@ -352,8 +368,8 @@
 			const savedVideos = JSON.parse(localStorage.getItem('savedVideos') || '[]');
 			
 			if (savedVideos.length > 0) {
-				// Display 3-5 random videos, ensuring variety
-				const numVideos = Math.min(Math.floor(Math.random() * 3) + 3, savedVideos.length);
+				// Display 3-6 random videos, ensuring variety
+				const numVideos = Math.min(Math.floor(Math.random() * 4) + 3, savedVideos.length);
 				const usedIndices = new Set();
 				const usedPositions = new Set();
 				
