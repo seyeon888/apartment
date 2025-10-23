@@ -6,12 +6,16 @@
 	<title>Webcam Pixel Filter</title>
 	<style>
 		body {
-			background-color: #000000;
+			background: radial-gradient(circle at center, #111111 0%, #000000 100%);
 			color: #ffffff;
 			font-family: Arial, sans-serif;
 			margin: 0;
 			padding: 0;
 			overflow: hidden;
+			width: 100vw;
+			height: 100vh;
+			max-width: 100vw;
+			max-height: 100vh;
 		}
 		.controls {
 			margin: 5px 0;
@@ -46,10 +50,13 @@
 		.main-container {
 			display: flex;
 			height: 100vh;
-			gap: 10px;
+			gap: 8px;
+			overflow: hidden;
+			width: 100vw;
+			max-width: 100vw;
 		}
 		.left-panel {
-			flex: 1;
+			flex: 0 0 30%;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
@@ -57,25 +64,161 @@
 			justify-content: center;
 		}
 		.right-panel {
-			flex: 1;
+			flex: 0 0 60%;
 			display: grid;
-			grid-template-columns: repeat(5, 1fr);
+			grid-template-columns: repeat(4, 1fr);
 			grid-template-rows: repeat(5, 1fr);
-			padding: 10px;
-			gap: 6px;
-			position: relative;
+			grid-auto-flow: row;
+			grid-auto-rows: 1fr;
+			gap: 12px;
+			background: #000000;
+			border-radius: 0;
+			box-shadow: none;
+			z-index: 1;
+			padding: 15px;
+			max-width: 60%;
+			overflow: hidden;
 		}
 		.main-canvas {
 			width: 100%;
 			max-width: 500px;
 			height: auto;
-			border: 2px solid #333;
 		}
 		.small-canvas {
-			width: 126px;
-			height: 94px;
-			border: 2px solid #666;
+			width: 80%;
+			height: 80%;
+			border: 1px solid #333;
+			border-radius: 0;
+			background: #000;
+			box-shadow: none;
+			transition: all 0.3s ease;
+			position: relative;
+			overflow: visible;
+			opacity: 0.8;
+			z-index: 2;
+			cursor: pointer;
+			margin: auto;
 		}
+		
+		.small-canvas:hover {
+			filter: brightness(2.5) saturate(1.8) contrast(1.5) hue-rotate(5deg);
+			transform: scale(1.07);
+			box-shadow: none;
+			animation: pulse-glow 0.6s ease-in-out infinite alternate;
+		}
+		
+		@keyframes pulse-glow {
+			0% {
+				filter: brightness(2.5) saturate(1.8) contrast(1.5) hue-rotate(5deg);
+				box-shadow: none;
+			}
+			100% {
+				filter: brightness(3.0) saturate(2.2) contrast(1.8) hue-rotate(8deg);
+				box-shadow: none;
+			}
+		}
+		
+		/* 가우시안 흐림 오버레이 효과 */
+		.small-canvas::after {
+			content: '';
+			position: absolute;
+			top: -20px;
+			left: -20px;
+			right: -20px;
+			bottom: -20px;
+			background: inherit;
+			filter: blur(15px) brightness(1.2);
+			opacity: 0.6;
+			z-index: 0;
+			pointer-events: none;
+		}
+		
+		/* 다양한 창문 조명 색상 - 강력한 글로우 효과 */
+		.small-canvas.red-glow {
+			background: 
+				radial-gradient(circle at center, rgba(250, 50, 50, 0.9) 0%, rgba(250, 50, 50, 0.7) 30%, rgba(250, 50, 50, 0.3) 60%, transparent 100%),
+				linear-gradient(135deg, #fa3232, #ff6b6b);
+			box-shadow: 
+				inset 0 0 40px rgba(250, 50, 50, 0.9),
+				inset 0 0 80px rgba(250, 50, 50, 0.6),
+				inset 0 0 120px rgba(250, 50, 50, 0.4),
+				inset 0 0 160px rgba(250, 50, 50, 0.2),
+				0 0 30px rgba(250, 50, 50, 0.9),
+				0 0 60px rgba(250, 50, 50, 0.7),
+				0 0 90px rgba(250, 50, 50, 0.5),
+				0 0 120px rgba(250, 50, 50, 0.3),
+				0 0 150px rgba(250, 50, 50, 0.1);
+			filter: brightness(1.3) saturate(1.5) contrast(1.2);
+		}
+		
+		.small-canvas.warm-yellow {
+			background: 
+				radial-gradient(circle at center, rgba(254, 230, 159, 0.9) 0%, rgba(254, 230, 159, 0.7) 30%, rgba(254, 230, 159, 0.3) 60%, transparent 100%),
+				linear-gradient(135deg, #fee69f, #fdd835);
+			box-shadow: 
+				inset 0 0 40px rgba(254, 230, 159, 0.9),
+				inset 0 0 80px rgba(254, 230, 159, 0.6),
+				inset 0 0 120px rgba(254, 230, 159, 0.4),
+				inset 0 0 160px rgba(254, 230, 159, 0.2),
+				0 0 30px rgba(254, 230, 159, 0.9),
+				0 0 60px rgba(254, 230, 159, 0.7),
+				0 0 90px rgba(254, 230, 159, 0.5),
+				0 0 120px rgba(254, 230, 159, 0.3),
+				0 0 150px rgba(254, 230, 159, 0.1);
+			filter: brightness(1.3) saturate(1.5) contrast(1.2);
+		}
+		
+		.small-canvas.cream-light {
+			background: 
+				radial-gradient(circle at center, rgba(254, 235, 210, 0.9) 0%, rgba(254, 235, 210, 0.7) 30%, rgba(254, 235, 210, 0.3) 60%, transparent 100%),
+				linear-gradient(135deg, #feebd2, #fff3e0);
+			box-shadow: 
+				inset 0 0 40px rgba(254, 235, 210, 0.9),
+				inset 0 0 80px rgba(254, 235, 210, 0.6),
+				inset 0 0 120px rgba(254, 235, 210, 0.4),
+				inset 0 0 160px rgba(254, 235, 210, 0.2),
+				0 0 30px rgba(254, 235, 210, 0.9),
+				0 0 60px rgba(254, 235, 210, 0.7),
+				0 0 90px rgba(254, 235, 210, 0.5),
+				0 0 120px rgba(254, 235, 210, 0.3),
+				0 0 150px rgba(254, 235, 210, 0.1);
+			filter: brightness(1.3) saturate(1.5) contrast(1.2);
+		}
+		
+		.small-canvas.orange-warm {
+			background: 
+				radial-gradient(circle at center, rgba(230, 136, 14, 0.9) 0%, rgba(230, 136, 14, 0.7) 30%, rgba(230, 136, 14, 0.3) 60%, transparent 100%),
+				linear-gradient(135deg, #e6880e, #ff9800);
+			box-shadow: 
+				inset 0 0 40px rgba(230, 136, 14, 0.9),
+				inset 0 0 80px rgba(230, 136, 14, 0.6),
+				inset 0 0 120px rgba(230, 136, 14, 0.4),
+				inset 0 0 160px rgba(230, 136, 14, 0.2),
+				0 0 30px rgba(230, 136, 14, 0.9),
+				0 0 60px rgba(230, 136, 14, 0.7),
+				0 0 90px rgba(230, 136, 14, 0.5),
+				0 0 120px rgba(230, 136, 14, 0.3),
+				0 0 150px rgba(230, 136, 14, 0.1);
+			filter: brightness(1.3) saturate(1.5) contrast(1.2);
+		}
+		
+		.small-canvas.blue-deep {
+			background: 
+				radial-gradient(circle at center, rgba(38, 59, 180, 0.9) 0%, rgba(38, 59, 180, 0.7) 30%, rgba(38, 59, 180, 0.3) 60%, transparent 100%),
+				linear-gradient(135deg, #263bb4, #3f51b5);
+			box-shadow: 
+				inset 0 0 40px rgba(38, 59, 180, 0.9),
+				inset 0 0 80px rgba(38, 59, 180, 0.6),
+				inset 0 0 120px rgba(38, 59, 180, 0.4),
+				inset 0 0 160px rgba(38, 59, 180, 0.2),
+				0 0 30px rgba(38, 59, 180, 0.9),
+				0 0 60px rgba(38, 59, 180, 0.7),
+				0 0 90px rgba(38, 59, 180, 0.5),
+				0 0 120px rgba(38, 59, 180, 0.3),
+				0 0 150px rgba(38, 59, 180, 0.1);
+			filter: brightness(1.3) saturate(1.5) contrast(1.2);
+		}
+		
 		.apartment-title {
 			color: #ffffff;
 			font-size: 28px;
@@ -98,16 +241,17 @@
 	
 	<div class="main-container">
 		<div class="left-panel">
-			<h1 class="apartment-title">Apartment</h1>
+			<h1 class="apartment-title">off the light</h1>
 			<div class="controls">
 				<label>Pixel Size: <input type="range" id="pixelSize" min="4" max="32" value="8"></label>
 				<span id="pixelSizeValue">8</span>
 			</div>
 			<div class="controls">
-				<button id="windowBtn">입주하기</button>
+				<button id="windowBtn">불 키기</button>
+				<div id="countdown" style="display: none; position: fixed; top: 20px; left: 20px; font-size: 48px; color: #ff6b6b; font-weight: bold; z-index: 1000; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">5</div>
 			</div>
 			<canvas id="mainCanvas" width="500" height="375" class="main-canvas"></canvas>
-			<p class="instruction-text">입주하기 버튼을 누르면 화면이 녹화됩니다. 아파트 밖에서 보일 창문 풍경을 녹화해보세요.</p>
+			<p class="instruction-text">불 키기 버튼을 눌러 야작해보세요. 오른쪽의 창문 물을 꺼서 학생들을 재워보세요.</p>
 		</div>
 		
 		<div class="right-panel" id="rightPanel">
@@ -144,10 +288,9 @@
 
 		windowBtn.onclick = function() {
 			if (!isRecording) {
-				startRecording();
-			} else {
-				stopRecording();
+				startCountdownAndRecording();
 			}
+			// 녹화 중에는 수동 중지 불가능 - 자동으로 5초 후 중지됨
 		}
 		
 		pixelSizeSlider.oninput = function() {
@@ -164,6 +307,38 @@
 			.catch(error => {
 				console.error('Error accessing webcam:', error);
 			});
+		}
+
+		function startCountdownAndRecording() {
+			const countdownElement = document.getElementById('countdown');
+			const windowBtn = document.getElementById('windowBtn');
+			
+			// Disable button during countdown
+			windowBtn.disabled = true;
+			windowBtn.textContent = '불 키는 중';
+			windowBtn.style.backgroundColor = '#666';
+			
+			// Show countdown
+			countdownElement.style.display = 'block';
+			
+			// Start recording immediately during countdown
+			startRecording();
+			
+			let count = 5;
+			countdownElement.textContent = count;
+			
+			const countdownInterval = setInterval(() => {
+				count--;
+				countdownElement.textContent = count;
+				
+				if (count <= 0) {
+					clearInterval(countdownInterval);
+					countdownElement.style.display = 'none';
+					
+					// Stop recording after countdown
+					stopRecording();
+				}
+			}, 1000);
 		}
 
 		function startRecording() {
@@ -193,16 +368,24 @@
 			
 			mediaRecorder.start();
 			isRecording = true;
-			windowBtn.textContent = '입주하는 중...';
-			windowBtn.style.backgroundColor = '#ff4444';
+			
+			// Update button state - 녹화 중에는 비활성화
+			const windowBtn = document.getElementById('windowBtn');
+			windowBtn.disabled = true;
+			windowBtn.textContent = '녹화 중...';
+			windowBtn.style.backgroundColor = '#666';
 		}
 
 		function stopRecording() {
 			if (mediaRecorder && isRecording) {
-			mediaRecorder.stop();
-			isRecording = false;
-			windowBtn.textContent = '입주하기';
-			windowBtn.style.backgroundColor = '#ff6b6b';
+				mediaRecorder.stop();
+				isRecording = false;
+				
+				// Update button state - 녹화 완료 후 다시 활성화
+				const windowBtn = document.getElementById('windowBtn');
+				windowBtn.disabled = false;
+				windowBtn.textContent = '불 키기';
+				windowBtn.style.backgroundColor = '#ff6b6b';
 			}
 		}
 
@@ -238,22 +421,23 @@
 		}
 
 		function displayRecordedVideo(videoUrl, savedPixelSize = 8, gridPosition = null, savedColorScheme = null) {
-			// Find a random position in the 5x5 grid if not specified
+			// Find a random position in the 4x5 grid if not specified
 			if (gridPosition === null) {
 				const usedPositions = new Set();
-				// Get all existing grid positions
+				// Get all existing grid positions (canvases in grid cells)
 				const existingCanvases = rightPanel.querySelectorAll('.small-canvas');
 				existingCanvases.forEach(canvas => {
-					const row = parseInt(canvas.style.gridRow) - 1;
-					const col = parseInt(canvas.style.gridColumn) - 1;
-					usedPositions.add(row * 5 + col);
+					const gridCell = canvas.closest('.grid-cell');
+					if (gridCell) {
+						usedPositions.add(parseInt(gridCell.dataset.gridPosition));
+					}
 				});
 				
 			// Find an available position
 			let randomPosition;
 			do {
-				randomPosition = Math.floor(Math.random() * 25); // 0-24 for 5x5 grid
-			} while (usedPositions.has(randomPosition) && usedPositions.size < 25);
+				randomPosition = Math.floor(Math.random() * 20); // 0-19 for 4x5 grid
+			} while (usedPositions.has(randomPosition) && usedPositions.size < 20);
 			
 			gridPosition = randomPosition;
 			console.log('Selected random position:', gridPosition, 'Used positions:', Array.from(usedPositions));
@@ -268,20 +452,50 @@
 			videoElement.muted = true;
 			videoElement.playsInline = true; // Important for mobile
 			videoElement.className = 'small-canvas';
-			videoElement.style.width = '100%';
-			videoElement.style.height = '100%';
-			videoElement.style.border = '2px solid #666';
+			videoElement.style.width = '80%';
+			videoElement.style.height = '80%';
+			videoElement.style.margin = 'auto';
+			videoElement.style.border = '1px solid #333';
+			videoElement.style.borderRadius = '0';
+			videoElement.style.boxShadow = 'none';
 			videoElement.style.objectFit = 'cover'; // Maintain aspect ratio
+			videoElement.style.overflow = 'visible';
+			videoElement.style.opacity = '0.8';
 			
-			// Calculate grid position (0-24 for 5x5 grid)
-			const row = Math.floor(gridPosition / 5) + 1;
-			const col = (gridPosition % 5) + 1;
-			videoElement.style.gridRow = row;
-			videoElement.style.gridColumn = col;
-			console.log('Video element positioned at row:', row, 'col:', col, 'from position:', gridPosition);
+			// 랜덤한 조명 색상 적용
+			const lightColors = ['red-glow', 'warm-yellow', 'cream-light', 'orange-warm', 'blue-deep'];
+			const randomColor = lightColors[Math.floor(Math.random() * lightColors.length)];
+			videoElement.classList.add(randomColor);
 			
-			// Add to right panel
-			rightPanel.appendChild(videoElement);
+			console.log('Video element positioned at grid position:', gridPosition);
+			
+			// Add to the corresponding grid cell
+			const gridCell = rightPanel.querySelector(`[data-grid-position="${gridPosition}"]`);
+			if (gridCell) {
+				gridCell.appendChild(videoElement);
+			} else {
+				// Fallback: create grid cell if it doesn't exist
+				const newGridCell = document.createElement('div');
+				newGridCell.className = 'grid-cell';
+				newGridCell.dataset.gridPosition = gridPosition;
+				
+				const row = Math.floor(gridPosition / 4) + 1;
+				const col = (gridPosition % 4) + 1;
+				
+				newGridCell.style.gridRow = row;
+				newGridCell.style.gridColumn = col;
+				newGridCell.style.width = '100%';
+				newGridCell.style.height = '100%';
+				newGridCell.style.position = 'relative';
+				
+				newGridCell.appendChild(videoElement);
+				rightPanel.appendChild(newGridCell);
+			}
+			
+			// Add click event to remove the video element
+			videoElement.addEventListener('click', function() {
+				videoElement.remove();
+			});
 			
 			// Apply pixel filter effect to the video with saved pixel size and random color scheme
 			const randomColorScheme = savedColorScheme !== null ? savedColorScheme : Math.floor(Math.random() * 3) + 1; // 1-3 for colored schemes
@@ -303,12 +517,21 @@
 			canvas.width = 126;
 			canvas.height = 94;
 			canvas.className = 'small-canvas';
-			canvas.style.border = '2px solid #666';
-			canvas.style.width = '100%';
-			canvas.style.height = '100%';
-			canvas.style.gridRow = videoElement.style.gridRow;
-			canvas.style.gridColumn = videoElement.style.gridColumn;
+			canvas.style.border = '1px solid #333';
+			canvas.style.borderRadius = '0';
+			canvas.style.boxShadow = 'none';
+			canvas.style.width = '80%';
+			canvas.style.height = '80%';
+			canvas.style.margin = 'auto';
+			// Canvas doesn't need grid positioning as it's inside a grid cell
 			canvas.style.objectFit = 'cover'; // Maintain aspect ratio
+			canvas.style.overflow = 'visible';
+			canvas.style.opacity = '0.8';
+			
+			// 비디오와 같은 조명 색상 적용
+			const lightColors = ['red-glow', 'warm-yellow', 'cream-light', 'orange-warm', 'blue-deep'];
+			const randomColor = lightColors[Math.floor(Math.random() * lightColors.length)];
+			canvas.classList.add(randomColor);
 			const ctx = canvas.getContext('2d');
 			
 			// Use the saved pixel size and color scheme from when the video was recorded
@@ -321,6 +544,12 @@
 			
 			// Add canvas to the same parent
 			videoElement.parentNode.appendChild(canvas);
+			
+			// Add click event to remove both canvas and video element
+			canvas.addEventListener('click', function() {
+				canvas.remove();
+				videoElement.remove();
+			});
 			
 			function processVideo() {
 				if (videoElement.readyState >= 2) { // HAVE_CURRENT_DATA
@@ -373,6 +602,15 @@
 				const usedIndices = new Set();
 				const usedPositions = new Set();
 				
+				// Get all existing grid positions (canvases in grid cells)
+				const existingCanvases = rightPanel.querySelectorAll('.small-canvas');
+				existingCanvases.forEach(canvas => {
+					const gridCell = canvas.closest('.grid-cell');
+					if (gridCell) {
+						usedPositions.add(parseInt(gridCell.dataset.gridPosition));
+					}
+				});
+				
 				for (let i = 0; i < numVideos; i++) {
 					let randomIndex;
 					do {
@@ -383,11 +621,11 @@
 					const randomVideo = savedVideos[randomIndex];
 					
 					if (randomVideo) {
-						// Find a random position in the 5x5 grid
-						let randomPosition;
-						do {
-							randomPosition = Math.floor(Math.random() * 25); // 0-24 for 5x5 grid
-						} while (usedPositions.has(randomPosition) && usedPositions.size < 25);
+					// Find a random position in the 4x5 grid
+					let randomPosition;
+					do {
+						randomPosition = Math.floor(Math.random() * 20); // 0-19 for 4x5 grid
+					} while (usedPositions.has(randomPosition) && usedPositions.size < 20);
 						
 						usedPositions.add(randomPosition);
 						
@@ -398,18 +636,51 @@
 					}
 				}
 			} else {
-				// Show placeholder message when no videos exist
-				const placeholder = document.createElement('div');
-				placeholder.style.color = '#666';
-				placeholder.style.textAlign = 'center';
-				placeholder.style.padding = '20px';
-				placeholder.style.gridColumn = '1 / -1';
-				placeholder.style.gridRow = '1 / -1';
-				placeholder.style.display = 'flex';
-				placeholder.style.alignItems = 'center';
-				placeholder.style.justifyContent = 'center';
-				placeholder.innerHTML = '아직 창문이 없습니다.<br>첫 번째 창문을 만들어보세요!';
-				rightPanel.appendChild(placeholder);
+				// Create default windows when no videos exist
+				createDefaultWindows();
+			}
+		}
+		
+		function createDefaultWindows() {
+			// Create 20 grid cells first to maintain fixed positions
+			for (let i = 0; i < 20; i++) {
+				const gridCell = document.createElement('div');
+				gridCell.className = 'grid-cell';
+				gridCell.dataset.gridPosition = i;
+				
+				// Calculate grid position for 4x5 grid
+				const row = Math.floor(i / 4) + 1;
+				const col = (i % 4) + 1;
+				
+				gridCell.style.gridRow = row;
+				gridCell.style.gridColumn = col;
+				gridCell.style.width = '100%';
+				gridCell.style.height = '100%';
+				gridCell.style.position = 'relative';
+				
+				rightPanel.appendChild(gridCell);
+			}
+			
+			// Create 20 windows (4x5 grid) with fixed positions
+			const lightColors = ['red-glow', 'warm-yellow', 'cream-light', 'orange-warm', 'blue-deep'];
+			
+			for (let i = 0; i < 20; i++) {
+				const windowDiv = document.createElement('div');
+				windowDiv.className = 'small-canvas';
+				windowDiv.dataset.gridPosition = i; // Store original position
+				
+				// Apply random color
+				const randomColor = lightColors[Math.floor(Math.random() * lightColors.length)];
+				windowDiv.classList.add(randomColor);
+				
+				// Add click event to remove the window
+				windowDiv.addEventListener('click', function() {
+					windowDiv.remove();
+				});
+				
+				// Add to the corresponding grid cell
+				const gridCell = rightPanel.querySelector(`[data-grid-position="${i}"]`);
+				gridCell.appendChild(windowDiv);
 			}
 		}
 
